@@ -1,4 +1,11 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
+
+declare global {
+  interface Window {
+    hcaptchaOnVerify?: (token: string) => void;
+    hcaptcha?: { reset: () => void };
+  }
+}
 import PageTransition from '../components/PageTransition';
 import { Mail, Phone, MapPin, Send, Github, Linkedin, Twitter } from 'lucide-react';
 import { motion } from 'framer-motion';
@@ -10,8 +17,16 @@ const Contact: React.FC = () => {
     subject: '',
     message: ''
   });
-  
+
+  const [captchaToken, setCaptchaToken] = useState('');
+
   const [formStatus, setFormStatus] = useState<'idle' | 'submitting' | 'success' | 'error'>('idle');
+
+  useEffect(() => {
+    window.hcaptchaOnVerify = (token: string) => {
+      setCaptchaToken(token);
+    };
+  }, []);
   
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
@@ -21,25 +36,43 @@ const Contact: React.FC = () => {
     }));
   };
   
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    if (!captchaToken) {
+      return;
+    }
+
     setFormStatus('submitting');
-    
-    // Simulate form submission
-    setTimeout(() => {
-      setFormStatus('success');
-      setFormData({
-        name: '',
-        email: '',
-        subject: '',
-        message: ''
+
+    try {
+      const response = await fetch('https://formsubmit.co/ajax/alexwilder.dev@gmail.com', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Accept: 'application/json'
+        },
+        body: JSON.stringify({
+          ...formData,
+          'h-captcha-response': captchaToken
+        })
       });
-      
-      // Reset form status after 3 seconds
-      setTimeout(() => {
-        setFormStatus('idle');
-      }, 3000);
-    }, 1000);
+
+      if (response.ok) {
+        setFormStatus('success');
+        setFormData({ name: '', email: '', subject: '', message: '' });
+        setCaptchaToken('');
+        window.hcaptcha?.reset();
+      } else {
+        setFormStatus('error');
+      }
+    } catch {
+      setFormStatus('error');
+    }
+
+    setTimeout(() => {
+      setFormStatus('idle');
+    }, 3000);
   };
   
   return (
@@ -198,6 +231,14 @@ const Contact: React.FC = () => {
                       placeholder="Tell me about your project or inquiry..."
                       required
                     ></textarea>
+                  </div>
+
+                  <div className="mb-6">
+                    <div
+                      className="h-captcha"
+                      data-sitekey={import.meta.env.VITE_HCAPTCHA_SITEKEY}
+                      data-callback="hcaptchaOnVerify"
+                    ></div>
                   </div>
                   
                   <button
