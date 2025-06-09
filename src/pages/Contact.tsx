@@ -10,6 +10,8 @@ import PageTransition from '../components/PageTransition';
 import { Mail, Phone, MapPin, Send, Github, Linkedin, Twitter } from 'lucide-react';
 import { motion } from 'framer-motion';
 
+const isCaptchaEnabled = Boolean(import.meta.env.VITE_HCAPTCHA_SITEKEY);
+
 const Contact: React.FC = () => {
   const [formData, setFormData] = useState({
     name: '',
@@ -23,6 +25,8 @@ const Contact: React.FC = () => {
   const [formStatus, setFormStatus] = useState<'idle' | 'submitting' | 'success' | 'error' | 'captcha'>('idle');
 
   useEffect(() => {
+    if (!isCaptchaEnabled) return;
+
     window.hcaptchaOnVerify = (token: string) => {
       setCaptchaToken(token);
     };
@@ -39,7 +43,7 @@ const Contact: React.FC = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (!captchaToken) {
+    if (isCaptchaEnabled && !captchaToken) {
       setFormStatus('captcha');
       setTimeout(() => setFormStatus('idle'), 3000);
       return;
@@ -56,7 +60,7 @@ const Contact: React.FC = () => {
         },
         body: JSON.stringify({
           ...formData,
-          'h-captcha-response': captchaToken
+          ...(isCaptchaEnabled ? { 'h-captcha-response': captchaToken } : {})
         })
       });
 
@@ -64,7 +68,9 @@ const Contact: React.FC = () => {
         setFormStatus('success');
         setFormData({ name: '', email: '', subject: '', message: '' });
         setCaptchaToken('');
-        window.hcaptcha?.reset();
+        if (isCaptchaEnabled) {
+          window.hcaptcha?.reset();
+        }
       } else {
         setFormStatus('error');
       }
@@ -235,18 +241,20 @@ const Contact: React.FC = () => {
                     ></textarea>
                   </div>
 
-                  <div className="mb-6">
-                    <div
-                      className="h-captcha"
-                      data-sitekey={import.meta.env.VITE_HCAPTCHA_SITEKEY}
-                      data-callback="hcaptchaOnVerify"
-                    ></div>
-                  </div>
+                  {isCaptchaEnabled && (
+                    <div className="mb-6">
+                      <div
+                        className="h-captcha"
+                        data-sitekey={import.meta.env.VITE_HCAPTCHA_SITEKEY}
+                        data-callback="hcaptchaOnVerify"
+                      ></div>
+                    </div>
+                  )}
                   
                   <button
                     type="submit"
                     className="btn-primary w-full justify-center"
-                    disabled={!captchaToken || formStatus === 'submitting'}
+                    disabled={(isCaptchaEnabled && !captchaToken) || formStatus === 'submitting'}
                   >
                     {formStatus === 'submitting' ? (
                       <>
@@ -307,6 +315,16 @@ const Contact: React.FC = () => {
                       animate={{ opacity: 1, y: 0 }}
                     >
                       Please complete the captcha before submitting the form.
+                    </motion.div>
+                  )}
+
+                  {!isCaptchaEnabled && (
+                    <motion.div
+                      className="mt-4 p-3 bg-blue-900/50 text-blue-400 rounded-lg border border-blue-700"
+                      initial={{ opacity: 0, y: -10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                    >
+                      Captcha is disabled in this environment.
                     </motion.div>
                   )}
                 </form>
