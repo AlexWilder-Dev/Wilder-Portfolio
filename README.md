@@ -1,21 +1,43 @@
 # Alex Wilder – Portfolio Site
 
-Welcome! This is the source code for my personal portfolio site, built with modern front-end tools and a focus on clean code, performance, and design.
+This repository contains the source code for my personal portfolio website. It showcases my work as a front‑end developer and is built using modern web tools focused on performance and clean design.
 
 ## 🚀 Tech Stack
-- **React 18**
-- **TypeScript**
-- **Vite**
-- **HTML5 & CSS3**
-- **ESLint + Prettier**
+- **React 18** with **TypeScript**
+- **Vite** for fast builds and hot reload
+- **Tailwind CSS** for styling
+- **Framer Motion** for animations
+- **ESLint & Prettier** for code quality
 
 ## 🎯 Features
 - Smooth animated UI
 - Fully responsive design
-- Modular component structure
+- Modular component architecture
 - Project showcase and contact form
-- SEO-friendly metadata structure
+- SEO‑friendly metadata
 
+## 🛠️ Local Development
+
+1. Install dependencies:
+   ```bash
+   npm install
+   ```
+2. Start the dev server:
+   ```bash
+   npm run dev
+   ```
+3. Build for production:
+   ```bash
+   npm run build
+   ```
+4. Preview the production build locally:
+   ```bash
+   npm run preview
+   ```
+5. Run the linter:
+   ```bash
+   npm run lint
+   ```
 
 ## 📡 Live Site
 
