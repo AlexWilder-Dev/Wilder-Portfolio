@@ -20,7 +20,7 @@ const Contact: React.FC = () => {
 
   const [captchaToken, setCaptchaToken] = useState('');
 
-  const [formStatus, setFormStatus] = useState<'idle' | 'submitting' | 'success' | 'error'>('idle');
+  const [formStatus, setFormStatus] = useState<'idle' | 'submitting' | 'success' | 'error' | 'captcha'>('idle');
 
   useEffect(() => {
     window.hcaptchaOnVerify = (token: string) => {
@@ -40,6 +40,8 @@ const Contact: React.FC = () => {
     e.preventDefault();
 
     if (!captchaToken) {
+      setFormStatus('captcha');
+      setTimeout(() => setFormStatus('idle'), 3000);
       return;
     }
 
@@ -244,7 +246,7 @@ const Contact: React.FC = () => {
                   <button
                     type="submit"
                     className="btn-primary w-full justify-center"
-                    disabled={formStatus === 'submitting'}
+                    disabled={!captchaToken || formStatus === 'submitting'}
                   >
                     {formStatus === 'submitting' ? (
                       <>
@@ -289,12 +291,22 @@ const Contact: React.FC = () => {
                   )}
                   
                   {formStatus === 'error' && (
-                    <motion.div 
+                    <motion.div
                       className="mt-4 p-3 bg-red-900/50 text-red-400 rounded-lg border border-red-700"
                       initial={{ opacity: 0, y: -10 }}
                       animate={{ opacity: 1, y: 0 }}
                     >
                       There was an error sending your message. Please try again later.
+                    </motion.div>
+                  )}
+
+                  {formStatus === 'captcha' && (
+                    <motion.div
+                      className="mt-4 p-3 bg-yellow-900/50 text-yellow-400 rounded-lg border border-yellow-700"
+                      initial={{ opacity: 0, y: -10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                    >
+                      Please complete the captcha before submitting the form.
                     </motion.div>
                   )}
                 </form>
