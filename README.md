@@ -15,3 +15,8 @@ Welcome! This is the source code for my personal portfolio site, built with mode
 - Modular component structure
 - Project showcase and contact form
 - SEO-friendly metadata structure
+
+
+## 📡 Live Site
+
+[🌐 View Portfolio Site](https://alex-wilder-portfolio.netlify.app)
