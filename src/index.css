@@ -112,7 +112,7 @@
   }
 
   .section-title {
-    @apply text-3xl md:text-4xl font-bold mb-8 text-center text-gpttext relative;
+    @apply text-3xl md:text-4xl font-bold mb-8 text-center text-gpttext relative pb-2;
   }
 
   .section-title::after {
