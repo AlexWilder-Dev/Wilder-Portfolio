@@ -265,19 +265,6 @@ const Home: React.FC = () => {
         </div>
       </section>
       
-      {/* Contact CTA */}
-      <section className="py-20 bg-primary-600 text-white">
-        <div className="container-custom text-center">
-          <h2 className="text-3xl md:text-4xl font-bold mb-4">Let's Work Together</h2>
-          <p className="text-xl mb-8 max-w-2xl mx-auto">
-            Have a project in mind? I'm currently available for freelance work.
-          </p>
-          <Link to="/contact" className="inline-flex items-center px-6 py-3 bg-white text-primary-600 rounded-lg font-medium shadow-sm hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-primary-600 transition-all duration-200">
-            Get in Touch
-            <ArrowRight className="ml-2 h-5 w-5" />
-          </Link>
-        </div>
-      </section>
     </PageTransition>
   );
 };
