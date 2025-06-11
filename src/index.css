@@ -11,6 +11,14 @@
     --color-gpt-border: #2d2d44;
   }
 
+  :root.light {
+    --color-gpt-bg: #ffffff;
+    --color-gpt-text: #1f2937;
+    --color-gpt-muted: #4b5563;
+    --color-gpt-card: #f9fafb;
+    --color-gpt-border: #e5e7eb;
+  }
+
   html {
     scroll-behavior: smooth;
   }

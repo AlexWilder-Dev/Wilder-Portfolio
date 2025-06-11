@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { NavLink, useLocation } from 'react-router-dom';
-import { Menu, X, Code } from 'lucide-react';
+import { Menu, X, Code, Sun, Moon } from 'lucide-react';
+import { useTheme } from '../contexts/ThemeContext';
 
 const Header: React.FC = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const location = useLocation();
+  const { theme, toggleTheme } = useTheme();
 
   // Close mobile menu when route changes
   useEffect(() => {
@@ -80,14 +82,21 @@ const Header: React.FC = () => {
             >
               Contact
             </NavLink>
-            <a 
-              href="/resume.pdf" 
-              target="_blank" 
+            <a
+              href="/resume.pdf"
+              target="_blank"
               rel="noopener noreferrer"
               className="btn-primary ml-4"
             >
               Resume
             </a>
+            <button
+              onClick={toggleTheme}
+              className="p-2 text-gpttext"
+              aria-label="Toggle theme"
+            >
+              {theme === 'light' ? <Moon size={20} /> : <Sun size={20} />}
+            </button>
           </nav>
           
           {/* Mobile Menu Button */}
@@ -143,14 +152,21 @@ const Header: React.FC = () => {
             >
               Contact
             </NavLink>
-            <a 
-              href="/resume.pdf" 
-              target="_blank" 
+            <a
+              href="/resume.pdf"
+              target="_blank"
               rel="noopener noreferrer"
               className="btn-primary self-start"
             >
               Resume
             </a>
+            <button
+              onClick={toggleTheme}
+              className="p-2 text-gpttext self-start"
+              aria-label="Toggle theme"
+            >
+              {theme === 'light' ? <Moon size={20} /> : <Sun size={20} />}
+            </button>
           </nav>
         )}
       </div>
